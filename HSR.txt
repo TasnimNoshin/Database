@@ -1,0 +1,184 @@
+connect to cs3db3;
+
+--++++++++++++++++++++++++++++++++++++++++++++++
+-- CREATE TABLES
+--++++++++++++++++++++++++++++++++++++++++++++++
+
+------------------------------------------------
+--  DDL Statements for table Person
+------------------------------------------------
+CREATE TABLE Person
+(
+PersonID int NOT NULL,
+FirstName varchar(60),
+lastName varchar(60),
+Gender varchar(60),
+StreetAddress varchar(60),
+CityAddress varchar(60),
+Province varchar(60),
+Occupation varchar(60),
+DateOfBirth varchar(60),
+PRIMARY KEY (PersonID)
+);
+
+------------------------------------------------
+--  DDL Statements for table Phone
+------------------------------------------------
+CREATE TABLE Phone
+(
+PersonID int NOT NULL,
+Type varchar(60),
+Number varchar(60) NOT NULL,
+PRIMARY KEY (Number),
+FOREIGN KEY (PersonID) references  Person(PersonID) on delete cascade
+);
+------------------------------------------------
+--  DDL Statements for table Passenger
+------------------------------------------------
+CREATE TABLE Passenger
+(
+PersonID int NOT NULL,
+PRIMARY KEY (PersonID),
+FOREIGN KEY (PersonID) references  Person(PersonID) on delete cascade
+);
+------------------------------------------------
+--  DDL Statements for table FareType
+------------------------------------------------
+CREATE TABLE FareType
+(
+Fare int,
+PersonID int NOT NULL,
+Type varchar(60) NOT NULL,
+PRIMARY KEY (Type),
+FOREIGN KEY (PersonID) references  Passenger(PersonID) on delete cascade
+);
+------------------------------------------------
+--  DDL Statements for table BusDriver
+------------------------------------------------
+CREATE TABLE BusDriver
+(
+PersonID int NOT NULL,
+BusID int NOT NULL,
+Salary varchar(60),
+YearOfService varchar(60),
+PRIMARY KEY (PersonID),
+FOREIGN KEY (PersonID) references  Person(PersonID) on delete cascade,
+FOREIGN KEY (BusID) references  Bus(BusID) on delete cascade
+);
+------------------------------------------------
+--  DDL Statements for table Log
+------------------------------------------------
+CREATE TABLE Log
+(
+PersonID int NOT NULL,
+Date varchar(60),
+PRIMARY KEY (PersonID),
+FOREIGN KEY (PersonID) references  BusDriver(PersonID) on delete cascade
+);
+------------------------------------------------
+--  DDL Statements for table Infraction
+------------------------------------------------
+CREATE TABLE Infraction
+(
+PersonID int NOT NULL,
+DemeritPoint int,
+Type varchar(60),
+FinancialPenalty varchar(60),
+PRIMARY KEY (PersonID),
+FOREIGN KEY (PersonID) references  Log(PersonID) on delete cascade
+);
+------------------------------------------------
+--  DDL Statements for table MaintenancePersonnel
+------------------------------------------------
+CREATE TABLE MaintenancePersonnel
+(
+PersonID int NOT NULL,
+Salary varchar(60),
+YearOfService varchar(60),
+Specialization varchar(60),
+Level varchar(60),
+PRIMARY KEY (PersonID),
+FOREIGN KEY (PersonID) references  Person(PersonID) on delete cascade
+);
+------------------------------------------------
+--  DDL Statements for table Bus
+------------------------------------------------
+CREATE TABLE Bus
+(
+BusID int NOT NULL,
+StopID int NOT NULL,
+NumOfSeats varchar(60),
+YearsOfOperation varchar(60),
+Manufacturer varchar(60),
+AdRevenue varchar(60),
+Fuel varchar(60),
+PRIMARY KEY (BusID),
+FOREIGN KEY (RouteID) references  Route(RouteID) on delete cascade
+);
+------------------------------------------------
+--  DDL Statements for table Schedule
+------------------------------------------------
+CREATE TABLE Schedule
+(
+BusID int NOT NULL,
+StopID int NOT NULL,
+RouteID int NOT NULL,
+Date varchar(60),
+Time varchar(60),
+PRIMARY KEY (StopID,BusID,RouteID),
+FOREIGN KEY (StopID) references  Stop(StopID) on delete cascade,
+FOREIGN KEY (BusID) references  Bus(BusID) on delete cascade,
+FOREIGN KEY (RouteID) references  Route(RouteID) on delete cascade
+);
+------------------------------------------------
+--  DDL Statements for table Stop
+------------------------------------------------
+CREATE TABLE Stop
+(
+StopID int NOT NULL,
+Name varchar(60),
+PRIMARY KEY (StopID)
+);
+------------------------------------------------
+--  DDL Statements for table Route
+------------------------------------------------
+CREATE TABLE Route
+(
+RouteID int NOT NULL,
+Name varchar(60),
+PRIMARY KEY (RouteID)
+);
+------------------------------------------------
+--  DDL Statements for table Site
+------------------------------------------------
+CREATE TABLE Site
+(
+Name varchar(60) NOT NULL,
+Address varchar(60) NOT NULL,
+StopID int NOT NULL,
+RouteID int NOT NULL,
+PhoneNum varchar(60),
+Capacity varchar(60),
+Category varchar(60),
+PRIMARY KEY (Name,Address),
+FOREIGN KEY (StopID) references  Stop(StopID) on delete cascade,
+FOREIGN KEY (RouteID) references  Route(RouteID) on delete cascade
+);
+------------------------------------------------
+--  DDL Statements for table Event
+------------------------------------------------
+CREATE TABLE Event
+(
+Name varchar(60) NOT NULL,
+Date varchar(60) NOT NULL,
+SiteName varchar(60) NOT NULL,
+SiteAddress varchar(60) NOT NULL,
+Time varchar(60),
+NumOfParticipants varchar(60),
+PRIMARY KEY (Name,Date),
+FOREIGN KEY (SiteName,SiteAddress) references  Site(Name,Address) on delete cascade
+);
+------------------------------------------------
+-- List all tables your created
+------------------------------------------------
+list tables;
